@@ -28,12 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.passBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.usernameBox = new System.Windows.Forms.TextBox();
             this.portBox = new System.Windows.Forms.TextBox();
             this.ipBox = new System.Windows.Forms.TextBox();
             this.logs = new System.Windows.Forms.RichTextBox();
@@ -42,13 +40,6 @@
             this.messageBox = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            // 
-            // passBox
-            // 
-            this.passBox.Location = new System.Drawing.Point(58, 94);
-            this.passBox.Name = "passBox";
-            this.passBox.Size = new System.Drawing.Size(100, 20);
-            this.passBox.TabIndex = 0;
             // 
             // label1
             // 
@@ -73,25 +64,16 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(0, 71);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(58, 13);
+            this.label3.Size = new System.Drawing.Size(0, 13);
             this.label3.TabIndex = 3;
-            this.label3.Text = "Username:";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(0, 94);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(56, 13);
+            this.label4.Size = new System.Drawing.Size(0, 13);
             this.label4.TabIndex = 4;
-            this.label4.Text = "Password:";
-            // 
-            // usernameBox
-            // 
-            this.usernameBox.Location = new System.Drawing.Point(58, 68);
-            this.usernameBox.Name = "usernameBox";
-            this.usernameBox.Size = new System.Drawing.Size(100, 20);
-            this.usernameBox.TabIndex = 5;
             // 
             // portBox
             // 
@@ -117,7 +99,7 @@
             // 
             // connectButton
             // 
-            this.connectButton.Location = new System.Drawing.Point(41, 120);
+            this.connectButton.Location = new System.Drawing.Point(37, 68);
             this.connectButton.Name = "connectButton";
             this.connectButton.Size = new System.Drawing.Size(75, 23);
             this.connectButton.TabIndex = 9;
@@ -127,24 +109,25 @@
             // 
             // sendButton
             // 
-            this.sendButton.Location = new System.Drawing.Point(12, 214);
+            this.sendButton.Location = new System.Drawing.Point(12, 177);
             this.sendButton.Name = "sendButton";
             this.sendButton.Size = new System.Drawing.Size(75, 23);
             this.sendButton.TabIndex = 10;
             this.sendButton.Text = "Send";
             this.sendButton.UseVisualStyleBackColor = true;
+            this.sendButton.Click += new System.EventHandler(this.sendButton_Click);
             // 
             // messageBox
             // 
-            this.messageBox.Location = new System.Drawing.Point(12, 188);
+            this.messageBox.Location = new System.Drawing.Point(12, 151);
             this.messageBox.Name = "messageBox";
-            this.messageBox.Size = new System.Drawing.Size(100, 20);
+            this.messageBox.Size = new System.Drawing.Size(133, 20);
             this.messageBox.TabIndex = 11;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(12, 172);
+            this.label5.Location = new System.Drawing.Point(12, 135);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(103, 13);
             this.label5.TabIndex = 12;
@@ -162,12 +145,10 @@
             this.Controls.Add(this.logs);
             this.Controls.Add(this.ipBox);
             this.Controls.Add(this.portBox);
-            this.Controls.Add(this.usernameBox);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.passBox);
             this.Name = "Form1";
             this.Text = "Client";
             this.ResumeLayout(false);
@@ -176,13 +157,10 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.TextBox passBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox usernameBox;
         private System.Windows.Forms.TextBox portBox;
         private System.Windows.Forms.TextBox ipBox;
         private System.Windows.Forms.RichTextBox logs;

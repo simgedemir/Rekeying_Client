@@ -18,7 +18,10 @@ namespace cs535_client
         bool terminating = false;
         bool connected = false;
         Socket clientSocket;
-        string username;
+        string seed1;
+        string seed2;
+        int rekeyingCount = 0;
+        byte[] currentKey;
         string IP;
         int port;
         public Form1()
@@ -41,8 +44,6 @@ namespace cs535_client
             clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             IP = ipBox.Text;
 
-            username = usernameBox.Text;
-            string password = passBox.Text;
             if (Int32.TryParse(portBox.Text, out port))
             {
                 try
@@ -51,6 +52,21 @@ namespace cs535_client
                     connectButton.Enabled = false;
                     connected = true;
                     logs.AppendText("Connected to server\n");
+                    using (System.IO.StreamReader fileReader =
+                        new System.IO.StreamReader("chain1.txt"))
+                    {
+                        seed1 = fileReader.ReadLine();
+                        byte[] temp = hexStringToByteArray(seed1);
+                        seed1 = Encoding.Default.GetString(temp);
+                    }
+                    using (System.IO.StreamReader fileReader =
+                        new System.IO.StreamReader("chain2.txt"))
+                    {
+                        seed2 = fileReader.ReadLine();
+                        byte[] temp = hexStringToByteArray(seed2);
+                        seed2 = Encoding.Default.GetString(temp);
+                    }
+                    currentKey = getKey(1, 100); //generate the first key and store as byte array 
                     Thread receiveThread = new Thread(new ThreadStart(Receive));
                     receiveThread.Start();
                 }
@@ -76,6 +92,31 @@ namespace cs535_client
                     clientSocket.Receive(buffer);
                     string incomingMessage = Encoding.Default.GetString(buffer);
                     incomingMessage = incomingMessage.TrimEnd('\0');
+                    int index1 = incomingMessage.IndexOf("{");
+                    int index2 = incomingMessage.IndexOf("}");
+                    string hmacStr = incomingMessage.Substring(index1 + 1, index2 - index1 - 1);
+                    string encryptedMessage = incomingMessage.Substring(index2 + 1);
+                    byte[] IV = new byte[16];
+                    byte[] key = new byte[16];
+                    Array.Copy(currentKey, 0, key, 0, 16);
+                    Array.Copy(currentKey, 16, IV, 0, 16);
+                    byte[] hmacsha256 = applyHMACwithSHA256(encryptedMessage, key);
+                    if (hmacStr.Equals(Encoding.Default.GetString(hmacsha256)))
+                    {
+                        byte[] decryption = decryptWithAES128(encryptedMessage, key, IV);
+                        string message = Encoding.Default.GetString(decryption);
+                        logs.AppendText("Recieved message: " + message + "\n");
+                        if (message.Contains("rekey"))
+                        {
+                            rekeyingCount++;
+                            currentKey = getKey(1 + rekeyingCount, 100 - rekeyingCount);
+                            logs.AppendText("New key: "+generateHexStringFromByteArray(currentKey)+"\n");
+                        }
+                    }
+                    else
+                    {
+                        logs.AppendText("HMAC cannot be verified!");
+                    }
                     
                 }
                 catch (Exception ex)
@@ -85,13 +126,40 @@ namespace cs535_client
                     {
                         logs.AppendText("The server has disconnected\n");
                     }
-
                     clientSocket.Close();
                     connected = false;
                 }
             }
         }
+        public byte[] getKey(int firstIndex, int secondIndex)
+        {
+            string firstHash = seed1;
+            string secondHash = seed2;
+            for (int i = 1; i < firstIndex; i++)
+            {
+                byte[] result = hashWithSHA256(firstHash);
+                firstHash = Encoding.Default.GetString(result);
+            }
+            for (int i = 1; i < secondIndex; i++)
+            {
+                byte[] result = hashWithSHA256(secondHash);
+                secondHash = Encoding.Default.GetString(result);
+            }
+            byte[] key = exclusiveOR(Encoding.Default.GetBytes(firstHash), Encoding.Default.GetBytes(secondHash));
+            return key;
+        }
+        public static byte[] exclusiveOR(byte[] arr1, byte[] arr2)
+        {
+            if (arr1.Length != arr2.Length)
+                throw new ArgumentException("arr1 and arr2 are not the same length");
 
+            byte[] result = new byte[arr1.Length];
+
+            for (int i = 0; i < arr1.Length; ++i)
+                result[i] = (byte)(arr1[i] ^ arr2[i]);
+
+            return result;
+        }
         static byte[] signWithRSA(string input, int algoLength, string xmlString)
         {
             // convert input string to byte array
@@ -266,6 +334,47 @@ namespace cs535_client
             }
 
             return result;
+        }
+
+        private void sendButton_Click(object sender, EventArgs e)
+        {
+            String message = messageBox.Text;
+            if (message.Length > 0)
+            {
+                
+                byte[] IV = new byte[16];
+                byte[] key = new byte[16];
+                Array.Copy(currentKey, 0, key, 0, 16);
+                Array.Copy(currentKey, 16, IV, 0, 16);
+                byte[] encrypedMessage = encryptWithAES128(message, key, IV);
+                byte[] hmacMessage = applyHMACwithSHA256(Encoding.Default.GetString(encrypedMessage), key);
+                string newMessage = "HMAC{" + Encoding.Default.GetString(hmacMessage) + "}";
+                newMessage = newMessage + Encoding.Default.GetString(encrypedMessage);
+                logs.AppendText("Sent message:" + message + "\n");
+                byte[] buffer = Encoding.Default.GetBytes(newMessage);
+                try
+                {
+                    clientSocket.Send(buffer);
+                }
+               
+                catch (Exception ex)
+                {
+                    Console.Write(ex);
+                    if (!terminating)
+                    {
+                        logs.AppendText("The server has disconnected\n");
+                    }
+
+                    clientSocket.Close();
+                    connected = false;
+                }
+                if (message.Contains("rekey"))
+                {
+                    rekeyingCount++;
+                    currentKey = getKey(1 + rekeyingCount, 100 - rekeyingCount);
+                    logs.AppendText("New key: " + generateHexStringFromByteArray(currentKey) + "\n");
+                }
+            }
         }
     }
 }

@@ -11,6 +11,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+/*
+    CS535 Homework 1
+    Simge Demir
+    Şevval Şimşek
+     
+*/
+
 namespace cs535_client
 {
     public partial class Form1 : Form
@@ -93,7 +100,7 @@ namespace cs535_client
                     string incomingMessage = Encoding.Default.GetString(buffer);
                     incomingMessage = incomingMessage.TrimEnd('\0');
                     int index1 = incomingMessage.IndexOf("{");
-                    int index2 = incomingMessage.IndexOf("}");
+                    int index2 = incomingMessage.LastIndexOf("}");
                     string hmacStr = incomingMessage.Substring(index1 + 1, index2 - index1 - 1);
                     string encryptedMessage = incomingMessage.Substring(index2 + 1);
                     byte[] IV = new byte[16];
@@ -110,12 +117,14 @@ namespace cs535_client
                         {
                             rekeyingCount++;
                             currentKey = getKey(1 + rekeyingCount, 100 - rekeyingCount);
-                            logs.AppendText("New key: "+generateHexStringFromByteArray(currentKey)+"\n");
+                            logs.AppendText("Switched to new key\n");
+                            //logs.AppendText("New key: "+generateHexStringFromByteArray(currentKey)+"\n");
                         }
                     }
                     else
                     {
                         logs.AppendText("HMAC cannot be verified!");
+                        connectButton.Enabled = true;
                     }
                     
                 }
@@ -125,6 +134,7 @@ namespace cs535_client
                     if (!terminating)
                     {
                         logs.AppendText("The server has disconnected\n");
+                        connectButton.Enabled = true;
                     }
                     clientSocket.Close();
                     connected = false;
@@ -372,7 +382,8 @@ namespace cs535_client
                 {
                     rekeyingCount++;
                     currentKey = getKey(1 + rekeyingCount, 100 - rekeyingCount);
-                    logs.AppendText("New key: " + generateHexStringFromByteArray(currentKey) + "\n");
+                    logs.AppendText("Switched to new key\n");
+                    //logs.AppendText("New key: " + generateHexStringFromByteArray(currentKey) + "\n");
                 }
             }
         }

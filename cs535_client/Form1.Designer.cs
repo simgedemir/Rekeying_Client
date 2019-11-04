@@ -81,6 +81,7 @@
             this.portBox.Name = "portBox";
             this.portBox.Size = new System.Drawing.Size(100, 20);
             this.portBox.TabIndex = 6;
+            this.portBox.Text = "1234";
             // 
             // ipBox
             // 
@@ -88,12 +89,13 @@
             this.ipBox.Name = "ipBox";
             this.ipBox.Size = new System.Drawing.Size(100, 20);
             this.ipBox.TabIndex = 7;
+            this.ipBox.Text = "127.0.0.1";
             // 
             // logs
             // 
             this.logs.Location = new System.Drawing.Point(164, 16);
             this.logs.Name = "logs";
-            this.logs.Size = new System.Drawing.Size(108, 196);
+            this.logs.Size = new System.Drawing.Size(189, 196);
             this.logs.TabIndex = 8;
             this.logs.Text = "";
             // 
@@ -137,7 +139,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.ClientSize = new System.Drawing.Size(365, 261);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.messageBox);
             this.Controls.Add(this.sendButton);

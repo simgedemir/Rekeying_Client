@@ -7,3 +7,12 @@ d:\users\suuser\documents\visual studio 2015\Projects\cs535_client\cs535_client\
 d:\users\suuser\documents\visual studio 2015\Projects\cs535_client\cs535_client\obj\Debug\cs535_client.exe
 d:\users\suuser\documents\visual studio 2015\Projects\cs535_client\cs535_client\obj\Debug\cs535_client.pdb
 d:\users\suuser\documents\visual studio 2015\Projects\cs535_client\cs535_client\obj\Debug\cs535_client.csprojResolveAssemblyReference.cache
+D:\Users\suuser\Desktop\Rekeying_Client\cs535_client\bin\Debug\cs535_client.exe.config
+D:\Users\suuser\Desktop\Rekeying_Client\cs535_client\obj\Debug\cs535_client.exe
+D:\Users\suuser\Desktop\Rekeying_Client\cs535_client\obj\Debug\cs535_client.pdb
+D:\Users\suuser\Desktop\Rekeying_Client\cs535_client\bin\Debug\cs535_client.exe
+D:\Users\suuser\Desktop\Rekeying_Client\cs535_client\bin\Debug\cs535_client.pdb
+D:\Users\suuser\Desktop\Rekeying_Client\cs535_client\obj\Debug\cs535_client.csprojResolveAssemblyReference.cache
+D:\Users\suuser\Desktop\Rekeying_Client\cs535_client\obj\Debug\cs535_client.Form1.resources
+D:\Users\suuser\Desktop\Rekeying_Client\cs535_client\obj\Debug\cs535_client.Properties.Resources.resources
+D:\Users\suuser\Desktop\Rekeying_Client\cs535_client\obj\Debug\cs535_client.csproj.GenerateResource.Cache

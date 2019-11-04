@@ -31,6 +31,8 @@ namespace cs535_client
         byte[] currentKey;
         string IP;
         int port;
+        String[] chain1 = new String[100];
+        String[] chain2 = new String[100];
         public Form1()
         {
             Control.CheckForIllegalCrossThreadCalls = false;
@@ -63,15 +65,19 @@ namespace cs535_client
                         new System.IO.StreamReader("chain1.txt"))
                     {
                         seed1 = fileReader.ReadLine();
-                        byte[] temp = hexStringToByteArray(seed1);
-                        seed1 = Encoding.Default.GetString(temp);
+                        for (int i = 0; i < 100; i++)
+                        {
+                            chain1[i] = fileReader.ReadLine();
+                        }
                     }
                     using (System.IO.StreamReader fileReader =
                         new System.IO.StreamReader("chain2.txt"))
                     {
                         seed2 = fileReader.ReadLine();
-                        byte[] temp = hexStringToByteArray(seed2);
-                        seed2 = Encoding.Default.GetString(temp);
+                        for (int i = 0; i < 100; i++)
+                        {
+                            chain2[i] = fileReader.ReadLine();
+                        }
                     }
                     currentKey = getKey(1, 100); //generate the first key and store as byte array 
                     Thread receiveThread = new Thread(new ThreadStart(Receive));
@@ -143,19 +149,9 @@ namespace cs535_client
         }
         public byte[] getKey(int firstIndex, int secondIndex)
         {
-            string firstHash = seed1;
-            string secondHash = seed2;
-            for (int i = 1; i < firstIndex; i++)
-            {
-                byte[] result = hashWithSHA256(firstHash);
-                firstHash = Encoding.Default.GetString(result);
-            }
-            for (int i = 1; i < secondIndex; i++)
-            {
-                byte[] result = hashWithSHA256(secondHash);
-                secondHash = Encoding.Default.GetString(result);
-            }
-            byte[] key = exclusiveOR(Encoding.Default.GetBytes(firstHash), Encoding.Default.GetBytes(secondHash));
+            String firstHash = chain1[firstIndex - 1];
+            String secondHash = chain2[secondIndex - 1];
+            byte[] key = exclusiveOR(hexStringToByteArray(firstHash),hexStringToByteArray(secondHash));
             return key;
         }
         public static byte[] exclusiveOR(byte[] arr1, byte[] arr2)
